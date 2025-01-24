@@ -89,11 +89,6 @@ app.addEventListener('click',event=>{
     const intersection = raycaster.intersectObject(globe)[0];
     if (intersection) {
       const point = intersection.point;
-      const test = new THREE.BoxGeometry(0.05,0.05,0.05);
-      const material = new THREE.MeshBasicMaterial({color:0x00ff00});
-      const cube = new THREE.Mesh(test,material);
-      cube.position.set(point.x,point.y,point.z);
-      scene.add(cube);
       const [min,closest] = countries.reduce((prev,curr)=>{
         const distance = Math.sqrt((point.x-curr.position.x)**2+(point.y-curr.position.y)**2+(point.z-curr.position.z)**2);
         if (distance < prev[0]) {return [distance,curr]}
