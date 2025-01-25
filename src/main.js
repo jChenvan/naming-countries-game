@@ -3,11 +3,9 @@ import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 const app = document.querySelector('#app');
 const dim = Math.min(window.innerWidth,window.innerHeight)*0.9;
-app.style.width = `${dim}px`;
-app.style.height = `${dim}px`;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75,app.clientWidth/app.clientHeight,0.1,1000);
+const camera = new THREE.PerspectiveCamera(75,1,0.1,1000);
 const cameraRadius = 2;
 let theta = 0;
 let phi = 0;
@@ -18,11 +16,11 @@ const setCamera = () => {
   camera.lookAt(0,0,0);
 }
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(app.clientWidth,app.clientHeight);
-app.appendChild(renderer.domElement);
+const renderer = new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(dim,dim);
+app.prepend(renderer.domElement);
 
-const ambient = new THREE.AmbientLight(0xffffff,0.6);
+const ambient = new THREE.AmbientLight(0xffffff,0.8);
 const directional = new THREE.DirectionalLight(0xffffff);
 directional.position.x = 1;
 directional.position.z = 1;
@@ -35,12 +33,20 @@ const loader = new GLTFLoader();
 let globe;
 let countries;
 
+const unselected = new THREE.MeshBasicMaterial({color:0xffff00});
+const selected = new THREE.MeshBasicMaterial({color:0xffae00});
+const correct = new THREE.MeshBasicMaterial({color:0x00ff00});
+const incorrect = new THREE.MeshBasicMaterial({color:0xff0000});
+
 loader.load(
   '/globeAsset.glb',
   function (gltf) {
     scene.add(gltf.scene);
     globe = gltf.scene.children[0];
     countries = gltf.scene.children.slice(1);
+    countries.forEach(country=>{
+      country.material = unselected;
+    });
   },
   undefined,
   err=>console.log(err)
@@ -53,21 +59,24 @@ function animate() {
 renderer.setAnimationLoop(animate);
 
 document.addEventListener('keydown',(event)=>{
-  event.preventDefault();
   switch (event.key) {
     case 'ArrowRight':
+      event.preventDefault();
       theta += 0.02;
       break;
     
     case 'ArrowLeft':
+      event.preventDefault();
       theta -= 0.02;
       break;
 
     case 'ArrowUp':
+      event.preventDefault();
       phi = Math.min(phi + 0.02,Math.PI/2);
       break;
 
     case 'ArrowDown':
+      event.preventDefault();
       phi = Math.max(phi - 0.02,-Math.PI/2);
       break;
     
@@ -80,9 +89,13 @@ document.addEventListener('keydown',(event)=>{
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
+const label = document.querySelector('label');
+const input = document.querySelector('input');
+const button = document.querySelector('button');
+let answer;
 
 app.addEventListener('click',event=>{
-  pointer.x = (event.offsetX / app.offsetWidth)*2 - 1;
+  pointer.x = (event.offsetX / app.offsetHeight)*2 - 1;
   pointer.y = -(event.offsetY / app.offsetHeight)*2 + 1;
   raycaster.setFromCamera(pointer,camera);
   if (globe) {
@@ -94,7 +107,48 @@ app.addEventListener('click',event=>{
         if (distance < prev[0]) {return [distance,curr]}
         return prev;
       },[2,null]);
-      console.log(closest.name);
+      if (answer) {answer.material = unselected}
+      answer = closest;
+      answer.material = selected;
+      label.textContent = 'What is this country?';
+      input.disabled = false;
+      button.disabled = false;
     }
   }
+});
+
+function simplify(text) {
+  const specials = [' ','_','-'];
+  const chars = [];
+  for (let i = 0; i < text.length; i++) {
+    if (!specials.includes(text[i])) {
+      chars.push(text[i]);
+    }
+  }
+  return chars.join('').toLowerCase();
+}
+
+const score = document.querySelector('.score');
+let w = 0;
+let l = 0;
+
+button.addEventListener('click',(e)=>{
+  e.preventDefault();
+  if (simplify(input.value) === simplify(answer.name)) {
+    alert('correct!');
+    answer.material = correct;
+    w += 1;
+  } else {
+    alert(`incorrect! Answer: ${answer.name}`);
+    answer.material = incorrect;
+    l += 1;
+  }
+  countries.forEach((val,index)=>{
+    if (val.name === answer.name) {
+      countries.splice(index,1);
+    }
+  });
+  answer = undefined;
+  input.value = '';
+  score.textContent = `${w} correct, ${l} incorrect, ${countries.length} remaining`;
 });
