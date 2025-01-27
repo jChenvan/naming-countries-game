@@ -27,7 +27,7 @@ let countries;
 
 const mats = {
   unselected : new THREE.MeshBasicMaterial({color:0xffff00,transparent:true}),
-  selected : new THREE.MeshBasicMaterial({color:0xffae00,transparent:true}),
+  selected : new THREE.MeshBasicMaterial({color:0x0000ff,transparent:true}),
   correct : new THREE.MeshBasicMaterial({color:0x00ff00,transparent:true}),
   incorrect : new THREE.MeshBasicMaterial({color:0xff0000,transparent:true}),
 }
@@ -162,7 +162,7 @@ button.addEventListener('click',(e)=>{
 
 let visible = true;
 
-app.addEventListener('dblclick',()=>{
+app.children[0].addEventListener('dblclick',()=>{
   if (visible) {
     for (const material in mats) {
       mats[material].opacity = 0;
