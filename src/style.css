@@ -24,3 +24,21 @@ form {
   border-radius: 5px;
   border: 2px white solid;
 }
+
+.message.correct {
+  color:greenyellow;
+}
+
+.message {
+  color:red;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score canvas {
+  width:200px;
+}

@@ -13,7 +13,11 @@
         <label for="answer">click a country.</label>
         <input type="text" id="answer" autocomplete="off" disabled>
         <button disabled>guess</button>
-        <div class="score"></div>
+        <div class="message"></div>
+        <div class="score">
+          <canvas height="100" width="1000"></canvas>
+          <div><span class="correct">0</span> correct, <span class="incorrect">0</span> incorrect, <span class="remaining">165</span> remaining</div>
+        </div>
       </form>
     </div>
     <script type="module" src="/src/main.js"></script>

@@ -113,6 +113,7 @@ app.addEventListener('click',event=>{
       label.textContent = 'What is this country?';
       input.disabled = false;
       button.disabled = false;
+      input.focus();
     }
   }
 });
@@ -128,18 +129,29 @@ function simplify(text) {
   return chars.join('').toLowerCase();
 }
 
-const score = document.querySelector('.score');
+const score = {
+  correct: document.querySelector('.score .correct'),
+  incorrect: document.querySelector('.score .incorrect'),
+  remaining: document.querySelector('.score .remaining'),
+};
+const ctx = document.querySelector('.score canvas').getContext("2d");
+ctx.fillStyle = '#ffff00';
+ctx.fillRect(0,0,1000,100);
+
+const message = document.querySelector('.message');
 let w = 0;
 let l = 0;
 
 button.addEventListener('click',(e)=>{
   e.preventDefault();
   if (simplify(input.value) === simplify(answer.name)) {
-    alert('correct!');
+    message.textContent = 'correct!';
+    message.classList.add('correct');
     answer.material = correct;
     w += 1;
   } else {
-    alert(`incorrect! Answer: ${answer.name}`);
+    message.classList.remove('correct');
+    message.textContent=`incorrect! Answer: ${answer.name}`;
     answer.material = incorrect;
     l += 1;
   }
@@ -150,5 +162,15 @@ button.addEventListener('click',(e)=>{
   });
   answer = undefined;
   input.value = '';
-  score.textContent = `${w} correct, ${l} incorrect, ${countries.length} remaining`;
+  input.disabled = true;
+  button.disabled = true;
+  score.correct.textContent = w;
+  score.incorrect.textContent = l;
+  score.remaining.textContent = countries.length;
+  ctx.fillStyle = '#ffff00';
+  ctx.fillRect(0,0,1000,100);
+  ctx.fillStyle = '#00ff00';
+  ctx.fillRect(0,0,(w/(w+l+countries.length))*1000,100);
+  ctx.fillStyle = '#ff0000';
+  ctx.fillRect((w/(w+l+countries.length))*1000,0,(l/(w+l+countries.length))*1000,100);
 });
