@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
-import { DragControls } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const app = document.querySelector('#app');
@@ -26,10 +25,12 @@ const loader = new GLTFLoader();
 let globe;
 let countries;
 
-const unselected = new THREE.MeshBasicMaterial({color:0xffff00});
-const selected = new THREE.MeshBasicMaterial({color:0xffae00});
-const correct = new THREE.MeshBasicMaterial({color:0x00ff00});
-const incorrect = new THREE.MeshBasicMaterial({color:0xff0000});
+const mats = {
+  unselected : new THREE.MeshBasicMaterial({color:0xffff00,transparent:true}),
+  selected : new THREE.MeshBasicMaterial({color:0xffae00,transparent:true}),
+  correct : new THREE.MeshBasicMaterial({color:0x00ff00,transparent:true}),
+  incorrect : new THREE.MeshBasicMaterial({color:0xff0000,transparent:true}),
+}
 
 loader.load(
   '/globeAsset.glb',
@@ -39,7 +40,7 @@ loader.load(
 
     countries = gltf.scene.children.slice(1);
     countries.forEach(country=>{
-      country.material = unselected;
+      country.material = mats.unselected;
     });
   },
   undefined,
@@ -74,9 +75,9 @@ app.addEventListener('click',event=>{
         if (distance < prev[0]) {return [distance,curr]}
         return prev;
       },[2,null]);
-      if (answer) {answer.material = unselected}
+      if (answer) {answer.material = mats.unselected}
       answer = closest;
-      answer.material = selected;
+      answer.material = mats.selected;
       label.textContent = 'What is this country?';
       input.disabled = false;
       button.disabled = false;
@@ -85,15 +86,34 @@ app.addEventListener('click',event=>{
   }
 });
 
+const altNames = {
+  united_states_of_america:['usa','united_states','america'],
+  democratic_republic_of_the_congo:['drc'],
+  united_arab_emirates:['uae'],
+};
+
 function simplify(text) {
-  const specials = [' ','_','-'];
   const chars = [];
   for (let i = 0; i < text.length; i++) {
-    if (!specials.includes(text[i])) {
+    const chr = text.charCodeAt(i);
+    if (chr >= 97 && chr <= 122) {
       chars.push(text[i]);
+    }
+    if (chr >= 65 && chr <= 90) {
+      chars.push(String.fromCharCode(chr+32));
     }
   }
   return chars.join('').toLowerCase();
+}
+
+function check(guess,answer) {
+  const simpleGuess = simplify(guess);
+  if (answer in altNames) {
+    for (const name of altNames[answer]) {
+      if (simplify(name) === simpleGuess) return true;
+    }
+  }
+  return simpleGuess === simplify(answer);
 }
 
 const score = {
@@ -111,15 +131,15 @@ let l = 0;
 
 button.addEventListener('click',(e)=>{
   e.preventDefault();
-  if (simplify(input.value) === simplify(answer.name)) {
+  if (check(input.value,answer.name)) {
     message.textContent = 'correct!';
     message.classList.add('correct');
-    answer.material = correct;
+    answer.material = mats.correct;
     w += 1;
   } else {
     message.classList.remove('correct');
     message.textContent=`incorrect! Answer: ${answer.name}`;
-    answer.material = incorrect;
+    answer.material = mats.incorrect;
     l += 1;
   }
   countries.forEach((val,index)=>{
@@ -134,10 +154,24 @@ button.addEventListener('click',(e)=>{
   score.correct.textContent = w;
   score.incorrect.textContent = l;
   score.remaining.textContent = countries.length;
-  ctx.fillStyle = '#ffff00';
-  ctx.fillRect(0,0,1000,100);
   ctx.fillStyle = '#00ff00';
   ctx.fillRect(0,0,(w/(w+l+countries.length))*1000,100);
   ctx.fillStyle = '#ff0000';
   ctx.fillRect((w/(w+l+countries.length))*1000,0,(l/(w+l+countries.length))*1000,100);
+});
+
+let visible = true;
+
+app.addEventListener('dblclick',()=>{
+  if (visible) {
+    for (const material in mats) {
+      mats[material].opacity = 0;
+    }
+  } else {
+    for (const material in mats) {
+      mats[material].opacity = 1;
+    }
+  }
+
+  visible = !visible;
 });
