@@ -8,6 +8,28 @@ body {
   color: white;
 }
 
+::backdrop, dialog {
+  background-color: black;
+}
+
+dialog * {
+  color: white;
+  text-align: center;
+}
+
+dialog button {
+  background-color: black;
+}
+
+dialog {
+  width: min(100%,50ch);
+  box-sizing: border-box;
+}
+
+img {
+  width:300px;
+}
+
 #app {
   display: flex;
   align-items: center;

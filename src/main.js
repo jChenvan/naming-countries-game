@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
+const dialog = document.querySelector('dialog');
+dialog.showModal();
+document.querySelector('dialog button').addEventListener('click',()=>dialog.close());
+
 const app = document.querySelector('#app');
 app.style.flexDirection = (window.innerWidth < window.innerHeight) ? 'column' : 'row';
 const canvas = document.querySelector('.canvas');
@@ -67,7 +71,7 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const label = document.querySelector('label');
 const input = document.querySelector('input');
-const button = document.querySelector('button');
+const button = document.querySelector('form button');
 let answer;
 
 let clickStart;
