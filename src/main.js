@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
+const app = document.querySelector('#app');
+app.style.flexDirection = (window.innerWidth < window.innerHeight) ? 'column' : 'row';
 const canvas = document.querySelector('.canvas');
-const dim = Math.min(window.innerWidth,window.innerHeight)*0.9;
+let dim = Math.min(window.innerWidth,window.innerHeight)*0.9;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75,1,0.1,1000);
@@ -11,6 +13,12 @@ const camera = new THREE.PerspectiveCamera(75,1,0.1,1000);
 const renderer = new THREE.WebGLRenderer({alpha:true});
 renderer.setSize(dim,dim);
 canvas.appendChild(renderer.domElement);
+
+window.onresize = () => {
+  dim = Math.min(window.innerWidth,window.innerHeight)*0.9;
+  renderer.setSize(dim,dim);
+  app.style.flexDirection = (window.innerWidth < window.innerHeight) ? 'column' : 'row';
+}
 
 const ambient = new THREE.AmbientLight(0xffffff,0.8);
 const directional = new THREE.DirectionalLight(0xffffff);
