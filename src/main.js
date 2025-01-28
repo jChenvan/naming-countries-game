@@ -84,8 +84,14 @@ const visited = {
   incorrect: [],
 }
 
+const message = document.querySelector('.message');
+
 let isRevealed;
-document.querySelector('.finish').addEventListener('click',(e)=>{e.preventDefault();isRevealed = true});
+document.querySelector('.finish').addEventListener('click',(e)=>{
+  e.preventDefault();
+  isRevealed = true;
+  message.textContent = 'all countries are revealed. reload the page to start over!';
+});
 
 canvas.addEventListener('mouseup',event=>{
   if (Date.now() - clickStart > 250) {return}
@@ -167,7 +173,6 @@ const ctx = document.querySelector('.score canvas').getContext("2d");
 ctx.fillStyle = '#ffff00';
 ctx.fillRect(0,0,1000,1);
 
-const message = document.querySelector('.message');
 let w = 0;
 let l = 0;
 
@@ -185,6 +190,9 @@ button.addEventListener('click',(e)=>{
     answer.material = mats.incorrect;
     visited.incorrect.push(answer.name);
     l += 1;
+  }
+  if (visited.correct.length + visited.incorrect.length === countries.length) {
+    message.textContent = 'Game over! Reload the page to restart.'
   }
   answer = undefined;
   input.value = '';
