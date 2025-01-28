@@ -62,7 +62,14 @@ const input = document.querySelector('input');
 const button = document.querySelector('button');
 let answer;
 
-canvas.addEventListener('click',event=>{
+let clickStart;
+canvas.addEventListener('mousedown', ()=>{
+  clickStart = Date.now();
+});
+
+canvas.addEventListener('mouseup',event=>{
+  if (Date.now() - clickStart > 250) {return}
+  else {clickStart = undefined}
   pointer.x = (event.offsetX / canvas.offsetHeight)*2 - 1;
   pointer.y = -(event.offsetY / canvas.offsetHeight)*2 + 1;
   raycaster.setFromCamera(pointer,camera);
