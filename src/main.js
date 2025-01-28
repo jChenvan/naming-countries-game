@@ -97,6 +97,8 @@ const altNames = {
   united_states_of_america:['usa','united_states','america'],
   democratic_republic_of_the_congo:['drc'],
   united_arab_emirates:['uae'],
+  central_african_republic:['car'],
+  united_kingdom:['uk']
 };
 
 function simplify(text) {
