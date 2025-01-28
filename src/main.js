@@ -79,9 +79,15 @@ canvas.addEventListener('mousedown', ()=>{
   clickStart = Date.now();
 });
 
+const visited = {
+  correct: [],
+  incorrect: [],
+}
+
 canvas.addEventListener('mouseup',event=>{
   if (Date.now() - clickStart > 250) {return}
   else {clickStart = undefined}
+  input.value = '';
   pointer.x = (event.offsetX / canvas.offsetHeight)*2 - 1;
   pointer.y = -(event.offsetY / canvas.offsetHeight)*2 + 1;
   raycaster.setFromCamera(pointer,camera);
@@ -94,9 +100,23 @@ canvas.addEventListener('mouseup',event=>{
         if (distance < prev[0]) {return [distance,curr]}
         return prev;
       },[2,null]);
-      if (answer) {answer.material = mats.unselected}
+      if (answer) {
+        if (visited.correct.includes(answer.name)) {
+          answer.material = mats.correct;
+        } else if (visited.incorrect.includes(answer.name)) {
+          answer.material = mats.incorrect;
+        } else {
+          answer.material = mats.unselected;
+        }
+      };
       answer = closest;
       answer.material = mats.selected;
+      if (visited.correct.includes(answer.name) || visited.incorrect.includes(answer.name)) {
+        input.disabled = true;
+        button.disabled = true;
+        input.value = answer.name;
+        return
+      }
       label.textContent = 'What is this country?';
       input.disabled = false;
       button.disabled = false;
@@ -156,18 +176,15 @@ button.addEventListener('click',(e)=>{
     message.textContent = 'correct!';
     message.classList.add('correct');
     answer.material = mats.correct;
+    visited.correct.push(answer.name);
     w += 1;
   } else {
     message.classList.remove('correct');
     message.textContent=`incorrect! Answer: ${answer.name}`;
     answer.material = mats.incorrect;
+    visited.incorrect.push(answer.name);
     l += 1;
   }
-  countries.forEach((val,index)=>{
-    if (val.name === answer.name) {
-      countries.splice(index,1);
-    }
-  });
   answer = undefined;
   input.value = '';
   input.disabled = true;
