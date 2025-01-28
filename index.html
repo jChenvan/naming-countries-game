@@ -22,13 +22,14 @@
       <div class="canvas"></div>
       <form action="">
         <label for="answer">click a country.</label>
-        <input type="text" id="answer" autocomplete="off" disabled>
+        <input type="text" id="answer" autocomplete="off" >
         <button disabled>guess</button>
         <div class="message"></div>
         <div class="score">
-          <canvas height="100" width="1000"></canvas>
+          <canvas height="1" width="1000"></canvas>
           <div><span class="correct">0</span> correct, <span class="incorrect">0</span> incorrect, <span class="remaining">165</span> remaining</div>
         </div>
+        <button class="finish">reveal answers</button>
       </form>
     </div>
     <script type="module" src="/src/main.js"></script>

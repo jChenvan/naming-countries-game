@@ -84,6 +84,9 @@ const visited = {
   incorrect: [],
 }
 
+let isRevealed;
+document.querySelector('.finish').addEventListener('click',(e)=>{e.preventDefault();isRevealed = true});
+
 canvas.addEventListener('mouseup',event=>{
   if (Date.now() - clickStart > 250) {return}
   else {clickStart = undefined}
@@ -111,14 +114,12 @@ canvas.addEventListener('mouseup',event=>{
       };
       answer = closest;
       answer.material = mats.selected;
-      if (visited.correct.includes(answer.name) || visited.incorrect.includes(answer.name)) {
-        input.disabled = true;
+      if (isRevealed || visited.correct.includes(answer.name) || visited.incorrect.includes(answer.name)) {
         button.disabled = true;
         input.value = answer.name;
         return
       }
       label.textContent = 'What is this country?';
-      input.disabled = false;
       button.disabled = false;
       input.focus();
     }
@@ -164,7 +165,7 @@ const score = {
 };
 const ctx = document.querySelector('.score canvas').getContext("2d");
 ctx.fillStyle = '#ffff00';
-ctx.fillRect(0,0,1000,100);
+ctx.fillRect(0,0,1000,1);
 
 const message = document.querySelector('.message');
 let w = 0;
@@ -187,15 +188,14 @@ button.addEventListener('click',(e)=>{
   }
   answer = undefined;
   input.value = '';
-  input.disabled = true;
   button.disabled = true;
   score.correct.textContent = w;
   score.incorrect.textContent = l;
   score.remaining.textContent = countries.length;
   ctx.fillStyle = '#00ff00';
-  ctx.fillRect(0,0,(w/(w+l+countries.length))*1000,100);
+  ctx.fillRect(0,0,(w/(w+l+countries.length))*1000,1);
   ctx.fillStyle = '#ff0000';
-  ctx.fillRect((w/(w+l+countries.length))*1000,0,(l/(w+l+countries.length))*1000,100);
+  ctx.fillRect((w/(w+l+countries.length))*1000,0,(l/(w+l+countries.length))*1000,1);
 });
 
 let visible = true;
