@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/earth.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Globe Game</title>
+    <script type="module" crossorigin src="/assets/index-CatlbDDq.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BCs1v-QQ.css">
+  </head>
+  <body>
+    <dialog>
+      <div>
+        <img src="/globe-game-logo.png" alt="">
+        <h1>Do <em>you</em> know all the countries of the world?</h1>
+        <p>In this game, you can click on the countries of the world, then try and guess their names!</p>
+        <p>Featuring a 3D globe, you can orbit around the earth by dragging, and zoom in by scrolling. If the indicators get in the way of seeing the globe, you can double-click to toggle them.</p>
+        <p>click below to begin the challenge!</p>
+        <button>start</button>
+      </div>
+    </dialog>
+    <div id="app">
+      <div class="canvas"></div>
+      <form action="">
+        <label for="answer">click a country.</label>
+        <input type="text" id="answer" autocomplete="off" >
+        <button disabled>guess</button>
+        <div class="message"></div>
+        <div class="score">
+          <canvas height="1" width="1000"></canvas>
+          <div><span class="correct">0</span> correct, <span class="incorrect">0</span> incorrect, <span class="remaining">165</span> remaining</div>
+        </div>
+        <button class="finish">reveal answers</button>
+      </form>
+    </div>
+  </body>
+</html>
