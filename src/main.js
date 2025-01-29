@@ -45,7 +45,7 @@ const mats = {
 }
 
 loader.load(
-  '/globeAsset.glb',
+  '/naming-countries-game/globeAsset.glb',
   function (gltf) {
     scene.add(gltf.scene);
     globe = gltf.scene.children[0];
