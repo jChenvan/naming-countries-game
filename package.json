@@ -13,6 +13,5 @@
   },
   "dependencies": {
     "three": "^0.172.0"
-  },
-  "homepage": "https://jchenvan.github.io/naming-countries-game/"
+  }
 }
