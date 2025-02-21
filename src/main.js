@@ -45,7 +45,7 @@ const mats = {
 }
 
 loader.load(
-  '/naming-countries-game/globeAsset.glb',
+  '/naming-countries-game/perfect-globe.glb',
   function (gltf) {
     scene.add(gltf.scene);
     globe = gltf.scene.children[0];
@@ -133,11 +133,11 @@ canvas.addEventListener('mouseup',event=>{
 });
 
 const altNames = {
-  united_states_of_america:['usa','united_states','america'],
-  democratic_republic_of_the_congo:['drc'],
-  united_arab_emirates:['uae'],
-  central_african_republic:['car'],
-  united_kingdom:['uk']
+  United_States_of_America:['usa','united_states','america'],
+  Democratic_Republic_of_the_Congo:['drc'],
+  United_Arab_Emirates:['uae'],
+  Central_African_Republic:['car'],
+  United_Kingdom:['uk']
 };
 
 function simplify(text) {
