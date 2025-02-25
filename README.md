@@ -1,6 +1,6 @@
 # Country Naming Game
 
-This frontend web app features a game which challenges you to name the countries of the world.
+This frontend web app features a game which challenges you to name the countries of the world. This app is currently deployed [here](https://jchenvan.github.io/naming-countries-game/)
 
 *the available countries is currently incomplete*
 
